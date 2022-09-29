@@ -6,7 +6,7 @@ from ..services import UserAdminService
 from ..DTO.input import AdminInput
 
 
-router = APIRouter(prefix="admins")
+router = APIRouter(prefix="/admins")
 
 
 @router.get("/")
