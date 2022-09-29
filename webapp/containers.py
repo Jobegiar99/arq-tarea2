@@ -3,13 +3,14 @@
 from dependency_injector import containers, providers
 
 from .database import Database
-from .repositories import UserRepository,UserAdminRepository
-from .services import UserService,UserAdminService
+from .repositories import UserRepository, UserAdminRepository
+from .services import UserService, UserAdminService
 
 
 class Container(containers.DeclarativeContainer):
 
-    wiring_config = containers.WiringConfiguration(modules=[".endpoints"])
+    wiring_config = containers.WiringConfiguration(
+        modules=[".views.view_admin", ".views.view_status", ".views.view_users"])
 
     config = providers.Configuration(yaml_files=["config.yml"])
 
@@ -19,7 +20,7 @@ class Container(containers.DeclarativeContainer):
         UserRepository,
         session_factory=db.provided.session,
     )
-    
+
     user_admin_repository = providers.Factory(
         UserAdminRepository,
         session_factory=db.provided.session,
