@@ -8,7 +8,7 @@ WORKDIR /code
 COPY . /code/
 
 RUN pip install --upgrade pip \
- && pip install -r requirements.txt
+    && pip install -r requirements.txt
 
 CMD uvicorn webapp.application:app --host ${HOST} --port ${PORT}
-RUN export PYTHONPATH="$PYTHONPATH:/code
+RUN export PYTHONPATH="$PYTHONPATH:/code"
