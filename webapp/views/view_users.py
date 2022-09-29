@@ -1,49 +1,53 @@
-def class UserView:
-    def __init__(self,router):
-        self.router = router
+from fastapi import APIRouter, Depends, Response, status
+from dependency_injector.wiring import inject, Provide
 
-    @self.router.get("/users")
-    @inject
-    def get_list(
-        self,
-        user_service: UserService = Depends(Provide[Container.user_service]),
-    ):
-        return user_service.get_users()
+from ..containers import Container
+from ..services import UserService
+from ..repositories import NotFoundError
+from ..DTO.input import UserInput
 
 
-    @self.router.get("/users/{user_id}")
-    @inject
-    def get_by_id(
-        self,
-        user_id: int,
-        user_service: UserService = Depends(Provide[Container.user_service]),
-    ):
-        try:
-            return user_service.get_user_by_id(user_id)
-        except NotFoundError:
-            return Response(status_code=status.HTTP_404_NOT_FOUND)
+router = APIRouter(prefix="/users")
 
 
-    @self.router.post("/users", status_code=status.HTTP_201_CREATED)
-    @inject
-    def add(
-        self,
-        user_input: UserInput,
-        user_service: UserService = Depends(Provide[Container.user_service])
-    ):
-        return user_service.create_user(user_input)
+@router.get("/")
+@inject
+def get_list(
+    user_service: UserService = Depends(Provide[Container.user_service]),
+):
+    return user_service.get_users()
 
 
-    @self.router.delete("/users/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
-    @inject
-    def remove(
-        self,
-        user_id: int,
-        user_service: UserService = Depends(Provide[Container.user_service]),
-    ):
-        try:
-            user_service.delete_user_by_id(user_id)
-        except NotFoundError:
-            return Response(status_code=status.HTTP_404_NOT_FOUND)
-        else:
-            return Response(status_code=status.HTTP_204_NO_CONTENT)
+@router.get("/{user_id}")
+@inject
+def get_by_id(
+    user_id: int,
+    user_service: UserService = Depends(Provide[Container.user_service]),
+):
+    try:
+        return user_service.get_user_by_id(user_id)
+    except NotFoundError:
+        return Response(status_code=status.HTTP_404_NOT_FOUND)
+
+
+@router.post("/", status_code=status.HTTP_201_CREATED)
+@inject
+def add(
+    user_input: UserInput,
+    user_service: UserService = Depends(Provide[Container.user_service])
+):
+    return user_service.create_user(user_input)
+
+
+@router.delete("/users/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
+@inject
+def remove(
+    user_id: int,
+    user_service: UserService = Depends(Provide[Container.user_service]),
+):
+    try:
+        user_service.delete_user_by_id(user_id)
+    except NotFoundError:
+        return Response(status_code=status.HTTP_404_NOT_FOUND)
+    else:
+        return Response(status_code=status.HTTP_204_NO_CONTENT)

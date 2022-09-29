@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 
 from .models.model_user import User
 from .models.model_user_admin import UserAdmin
-from .input import UserInput, AdminInput
+from .DTO.input import UserInput, AdminInput
 
 
 class UserRepository:

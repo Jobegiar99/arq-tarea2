@@ -1,9 +1,9 @@
-from .endpoints_module import router
+from fastapi import APIRouter
 
-class StatusView:
-    def __init__(self,router):
-        self.router = router
 
-    @self.router.get("/status")
-    def get_status(self,):
-        return {"status": "OK"}
+router = APIRouter(prefix="/status")
+
+
+@router.get("/")
+def get_status():
+    return {"status": "OK"}
