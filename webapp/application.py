@@ -3,8 +3,7 @@
 from fastapi import FastAPI
 
 from .containers import Container
-from . import endpoints
-from .view.endpoints_module import router
+from .views import view_admin, view_status, view_users
 
 
 def create_app() -> FastAPI:
@@ -15,7 +14,9 @@ def create_app() -> FastAPI:
 
     app = FastAPI()
     app.container = container
-    app.include_router(endpoints.router)
+    app.include_router(view_admin.router)
+    app.include_router(view_status.router)
+    app.include_router(view_users.router)
     return app
 
 

@@ -3,9 +3,10 @@
 from uuid import uuid4
 from typing import Iterator
 
-from .repositories import UserRepository,UserAdminRepository
-from .models import User,UserAdmin
-from .input import UserInput,AdminInput
+from .repositories import UserRepository, UserAdminRepository
+from .models.model_user import User
+from .models.model_user_admin import UserAdmin
+from .DTO.input import UserInput, AdminInput
 
 
 class UserService:
@@ -19,7 +20,7 @@ class UserService:
     def get_user_by_id(self, user_id: int) -> User:
         return self._repository.get_by_id(user_id)
 
-    def create_user(self,user_input : UserInput) -> User:
+    def create_user(self, user_input: UserInput) -> User:
         return self._repository.add(user_input)
 
     def delete_user_by_id(self, user_id: int) -> None:
@@ -33,8 +34,6 @@ class UserAdminService:
 
     def get_admin_users(self) -> Iterator[UserAdmin]:
         return self._repository.get_all()
-    
-    def create_admin(self,admin_input : AdminInput) -> UserAdmin:
-        return self._repository.add(admin_input)
 
-    
+    def create_admin(self, admin_input: AdminInput) -> UserAdmin:
+        return self._repository.add(admin_input)
