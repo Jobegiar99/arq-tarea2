@@ -5,8 +5,9 @@ from typing import Callable, Iterator
 
 from sqlalchemy.orm import Session
 
-from .models import User,UserAdmin
-from .input import UserInput,AdminInput
+from .models.model_user import User
+from .models.model_user_admin import UserAdmin
+from .input import UserInput, AdminInput
 
 
 class UserRepository:
@@ -16,7 +17,7 @@ class UserRepository:
 
     def get_all(self) -> Iterator[User]:
         with self.session_factory() as session:
-            return session.query(User).all() 
+            return session.query(User).all()
 
     def get_by_id(self, user_id: int) -> User:
         with self.session_factory() as session:
@@ -28,13 +29,13 @@ class UserRepository:
     def add(self, user_input: UserInput) -> User:
         with self.session_factory() as session:
             user = User(
-                email = user_input.email,
-                hashed_password = user_input.hashed_password,
-                is_active = user_input.is_active,
-                first_name = user_input.first_name,
-                last_name = user_input.last_name,
-                phone = user_input.phone,
-                )
+                email=user_input.email,
+                hashed_password=user_input.hashed_password,
+                is_active=user_input.is_active,
+                first_name=user_input.first_name,
+                last_name=user_input.last_name,
+                phone=user_input.phone,
+            )
             session.add(user)
             session.commit()
             session.refresh(user)
@@ -42,11 +43,13 @@ class UserRepository:
 
     def delete_by_id(self, user_id: int) -> None:
         with self.session_factory() as session:
-            entity: User = session.query(User).filter(User.id == user_id).first()
+            entity: User = session.query(User).filter(
+                User.id == user_id).first()
             if not entity:
                 raise UserNotFoundError(user_id)
             session.delete(entity)
             session.commit()
+
 
 class UserAdminRepository:
 
@@ -55,15 +58,14 @@ class UserAdminRepository:
 
     def get_all(self) -> Iterator[UserAdmin]:
         with self.session_factory() as session:
-            return session.query(UserAdmin).all() 
+            return session.query(UserAdmin).all()
 
-    
     def add(self, admin_input: AdminInput) -> User:
         with self.session_factory() as session:
             user_admin = UserAdmin(
-                user_id = admin_input.user_id,
-                is_admin = admin_input.is_admin,
-                )
+                user_id=admin_input.user_id,
+                is_admin=admin_input.is_admin,
+            )
             session.add(user_admin)
             session.commit()
             session.refresh(user_admin)
