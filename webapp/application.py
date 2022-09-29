@@ -4,7 +4,7 @@ from fastapi import FastAPI
 
 from .containers import Container
 from . import endpoints
-from .view.endpoints_module import router
+from .views.endpoints_module import router
 
 
 def create_app() -> FastAPI:
